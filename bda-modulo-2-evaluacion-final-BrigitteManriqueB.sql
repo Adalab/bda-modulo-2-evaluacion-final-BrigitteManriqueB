@@ -77,7 +77,7 @@ WHERE length > 120;
 				/* Comprobación consulta*/
 				SELECT *
 				FROM film
-				WHERE length > 120;  -- En la comprobación verifico que muestra todos los campos de la tabla y confirmo las peliculas con coinciden con una duración inferior a 120 
+				WHERE length > 120;  -- En la comprobación verifico que muestra todos los campos de la tabla y confirmo las peliculas que coinciden con una duración superior a 120 
 
 
 /* 5. Recupera los nombres de todos los actores.*/
@@ -107,10 +107,10 @@ last_name AS Apellido
 FROM actor
 WHERE last_name = 'Gibson';
 
-			/*Comprobación consulta*/
-			SELECT *
-			FROM actor
-			WHERE last_name <> 'Gibson';  -- Para verificar uso el operador: <>. Este operador devuelve todos los actores que no se apellidan 'Gibson. 
+				/*Comprobación consulta*/
+				SELECT *
+				FROM actor
+				WHERE last_name <> 'Gibson';  -- Para verificar uso el operador: <>. Este operador devuelve todos los actores que no se apellidan 'Gibson. De un total de 200 actores, esta comprobación devuelve 199.
 
 
 /* 7. Encuentra los nombres de los actores que tengan un actor_id entre 10 y 20.*/
@@ -124,12 +124,12 @@ first_name AS Nombre
 FROM actor
 WHERE actor_id BETWEEN 10 AND 20;
 
-			/*Comprobación consulta*/
-			SELECT 
-            actor_id,
-			first_name
-			FROM actor
-			WHERE actor_id BETWEEN 10 AND 20; -- Con el campo actor_id compruebo que los resultados de la consulta se cumple. 
+				/*Comprobación consulta*/
+				SELECT 
+				actor_id,
+				first_name
+				FROM actor
+				WHERE actor_id BETWEEN 10 AND 20; -- Con el campo actor_id compruebo que los resultados de la consulta se cumplen. 
 
 
 /* 8. Encuentra el título de las películas en la tabla film que no sean ni "R" ni "PG-13" en cuanto a su clasificación.*/
@@ -143,12 +143,12 @@ title AS Título
 FROM film
 WHERE rating NOT IN ('R', 'PG-13'); -- Uso el operador de filtro NOT IN para que los valores (titulos de las peliculas) asociados a R y PG-13 no estén presentes en el resultado de la consulta.
 		
-			/* Comprobación consulta*/
-			SELECT
-			title AS Título,
-			rating AS Clasificación  -- Agrego el campo rating para comprobar los resultados. 
-			FROM film
-			WHERE rating NOT IN ('R', 'PG-13');  
+				/* Comprobación consulta*/
+				SELECT
+				title AS Título,
+				rating AS Clasificación  -- Agrego el campo rating para comprobar los resultados. 
+				FROM film
+				WHERE rating NOT IN ('R', 'PG-13');  
 
 
 /* 9. Encuentra la cantidad total de películas en cada clasificación de la tabla film y muestra la clasificación junto con el recuento.*/
@@ -163,12 +163,12 @@ COUNT(film_id) AS Recuento_peliculas -- Uso función agregada COUNT para contar 
 FROM film
 GROUP BY rating HAVING Recuento_peliculas; -- Agrupo la consulta por Clasificación 
 
-			/* Comprobación consulta*/
-			SELECT
-			rating AS Clasificación,
-			film_id AS Película
-			FROM film
-			WHERE rating = 'PG'; -- Uso la clausula WHERE para comprobar que, de acuerdo a la clasificacion seleccionada, ésta coincide con el resultado de la consulta.
+				/* Comprobación consulta*/
+				SELECT
+				rating AS Clasificación,
+				film_id AS Película
+				FROM film
+				WHERE rating = 'PG'; -- Uso la clausula WHERE para comprobar que, de acuerdo a la clasificacion seleccionada, ésta coincide con el resultado de la consulta.
 
 
 /* 10. Encuentra la cantidad total de películas alquiladas por cada cliente y muestra el ID del cliente, su nombre y apellido junto con la cantidad de películas alquiladas.*/ 
@@ -186,9 +186,9 @@ COUNT(rental_id) AS Total_peliculas_alquiladas  -- Uso la función agregada COUN
 FROM customer
 LEFT JOIN rental   
 ON customer.customer_id = rental.customer_id
-GROUP BY customer.customer_id HAVING Total_peliculas_alquiladas; -- Agrupo los resultados por cliente  y el total de peliculas alquiladas por cada uno. 
+GROUP BY customer.customer_id HAVING Total_peliculas_alquiladas; -- Agrupo los resultados por cliente_id, y el total de peliculas alquiladas por cada uno. 
 
--- Uso LETF JOIN para unir los datos comunes entre ambas tablas y que muestre además, los registros de clientes de la tabla clientes y verifico si hay clientes que no alquilaron peliculas.
+-- Uso LETF JOIN para unir los datos comunes entre ambas tablas y que muestre además, los registros de clientes de la tabla clientes. Esto me permite ver si hay clientes que no alquilaron peliculas y todos han alquilado porque no aparece ningún NULL
 
 				/* Comprobación consulta*/
 				SELECT
@@ -206,7 +206,7 @@ GROUP BY customer.customer_id HAVING Total_peliculas_alquiladas; -- Agrupo los r
 
 SELECT
 name AS Categoria,
-COUNT(rental.rental_id) AS Total_peliculas_alquiladas   -- Uso la función agregada COUNT para contar los alquileres de peliculas que se han hecho
+COUNT(rental.rental_id) AS Total_peliculas_alquiladas   -- Uso la función agregada COUNT para contar los alquileres de peliculas que se han hecho. Tomo como campo de cálculo rental_id
 FROM category
 INNER JOIN film_category    
 ON category.category_id = film_category.category_id  
@@ -255,11 +255,10 @@ INNER JOIN film
 ON film_actor.film_id = film.film_id
 WHERE title IN ('Indian Love'); 
 
--- Uso INNER JOIN en todas las uniones de tablas porque queremos obtener los actores que participaron en la película 'Indian Love', y no todos los actores, hayan actuado o no en esa película.
+-- Uso INNER JOIN en todas las uniones de tablas porque queremos obtener los actores que participaron en la película 'Indian Love', y no todos los registros de actores que hayan actuado o no en esa película.
 -- Uso en la consulta film_id para conocer el código de la película Indian Love y hacer la comprobación. Luego elimino este campo.
 
 				/*Comprobación consulta*/
-
 				SELECT
 				actor_id AS Cliente_ID,
 				film_id AS Pelicula
@@ -326,7 +325,7 @@ LEFT JOIN category
 ON film_category.category_id = category.category_id
 WHERE category.name = 'Family';
 
--- Uso LETF JOIN en esta consulta para unir los datos comunes entre ambas tablas y que muestre además, los registros de todas las peliculas de la tabla film, y verifico que si hay alguna que no esté dentro de alguna categoría.
+-- Uso LETF JOIN en esta consulta para unir los datos comunes entre ambas tablas y que muestre además, los registros de todas las peliculas de la tabla film. Esto también me ayuda a verificar si hay alguna que no esté dentro de alguna categoría.
 -- Uso en la consulta category_id para conocer el código de la categoria Family y hacer la comprobación. Luego elimino este campo. 
 
 
@@ -383,7 +382,6 @@ HAVING Número_Peliculas > 10; -- Filtro por conteo superior a 10 películas.
 
 
 				/* Comprobación consulta*/
-
 				SELECT
 				actor_id AS Actor,
 				count(film_id) AS Peliculas_Actor
@@ -414,7 +412,7 @@ ORDER BY actor;
 				FROM film_actor
 				WHERE actor_id IS NULL OR NOT NULL AND film_id IS NOT NULL OR NULL;   
 
-				-- Esta comprobación me genera dudas pero aún así pienso que es una forma de verificar que el resultado de la consulta es correcto. Esta comprobación no se me ocurre hacerla de otra manera. 
+				-- Esta comprobación me genera dudas pero aún así pienso que es una forma de verificar si el resultado de la consulta es correcto. Esta comprobación no se me ocurre hacerla de otra manera. 
 
 
 /*20. Encuentra las categorías de películas que tienen un promedio de duración superior a 120 minutos y muestra el nombre de la categoría junto con el promedio de duración.*/
@@ -424,7 +422,6 @@ ORDER BY actor;
 -- Condición/filtro: Encontrar las categorias que tengan un promedio de duración superior a 120 minutos. Uso función agregada AVG en el campo LENGTH para sacar el promedio de las peliculas.
 
 SELECT
-category.category_id,
 name as Categoria,
 AVG(film.length) AS Duracion_promedio  -- 
 FROM category
@@ -433,10 +430,10 @@ ON category.category_id = film_category.category_id
 INNER JOIN film 
 ON film_category.film_id = film.film_id
 GROUP BY name   -- Agrupo por nombre de categoría
-HAVING Duracion_promedio > 120; -- Filtro por promedio superior a 120 minutos.
+HAVING Duracion_promedio > 120; -- Filtro por promedio superior a 120 minutos. Muestra 4 categorías de 16
 
 -- Uso INNER JOIN porque queremos encontrar solo las categorias de peliculas que tengan un promedio superior a 120 minutos. No necesitamos todos los registros de categorías de la tabla. 
--- Uso el campo category_id para conocer el código de identifcación de la categoría y luego poder hacer la comprobación. Luego lo elimino de la consulta. 
+-- Uso el operador de comparación '<' para hacer la comprobación y ver las categorías de peliculas que tienen una duración inferior a 120 minutos. Muestra un total de 12 categorías. Luego lo elimino de la consulta. 
              
            
 /*21. Encuentra los actores que han actuado en al menos 5 películas y muestra el nombre del actor junto con la cantidad de películas en las que han actuado.*/
@@ -446,7 +443,7 @@ HAVING Duracion_promedio > 120; -- Filtro por promedio superior a 120 minutos.
 -- Condición/filtro: actores que hayan actuado en >=5 peliculas. Uso funciones agregadas para hacer el conteo.
 
 SELECT
-first_name,
+first_name AS Nombre,
 COUNT(film_actor.film_id) AS Cantidad_peliculas  -- Uso función agregada COUNT para contar las peliculas por actor.
 FROM actor
 INNER JOIN film_actor
@@ -460,7 +457,7 @@ HAVING Cantidad_peliculas >=5; -- Filtro para que muestre el resultado de al men
 
 				/*Comprobación consulta*/
 				SELECT
-				actor_id,
+				actor_id AS Actor,
 				COUNT(film_id) AS min_Cantidad_peliculas
 				FROM film_actor
 				WHERE actor_id = 19
